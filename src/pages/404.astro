@@ -1,18 +1,30 @@
 ---
-// 高颜值 404
-import Layout from '../layouts/Layout.astro';
+// 高颜值 404，复制主站 head 和样式
 ---
 
-<Layout title="页面不见了 - Novatra AI">
-  <main class="flex items-center justify-center min-h-screen bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100">
-  <div class="text-center space-y-6">
-    <img src="/logo.svg" alt="Logo" class="h-16 mx-auto" />
-    <h1 class="text-5xl font-extrabold">404</h1>
-    <p class="text-lg text-stone-600 dark:text-stone-400">页面好像迷路了</p>
-    <p class="text-sm text-stone-500 dark:text-stone-500">别担心，技术的探索总是伴随着未知。</p>
-    <a href="/" class="inline-block mt-4 px-6 py-2 bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 rounded-lg font-semibold hover:opacity-90 transition">
-      返回首页
-    </a>
-  </div>
-  </main>
-</Layout>
+<!doctype html>
+<html lang="zh" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>页面不见了 - Novatra AI</title>
+    <script is:inline>
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
+    <link rel="stylesheet" href="/_astro/about.BWwiBGH1.css" />
+  </head>
+  <body class="flex items-center justify-center min-h-screen bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100 antialiased">
+    <div class="text-center space-y-6">
+      <img src="/logo.svg" alt="Logo" class="h-16 mx-auto" />
+      <h1 class="text-5xl font-extrabold">404</h1>
+      <p class="text-lg text-stone-600 dark:text-stone-400">页面好像迷路了</p>
+      <p class="text-sm text-stone-500 dark:text-stone-500">别担心，技术的探索总是伴随着未知。</p>
+      <a href="/" class="inline-block mt-4 px-6 py-2 bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 rounded-lg font-semibold hover:opacity-90 transition">
+        返回首页
+      </a>
+    </div>
+  </body>
+</html>
