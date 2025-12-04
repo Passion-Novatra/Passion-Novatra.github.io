@@ -4,6 +4,50 @@ import AdminLayout from '../../components/AdminLayout.astro';
 const GITHUB_ORG = 'Passion-Novatra';
 ---
 
+<script define:vars={{ GITHUB_ORG }}>
+  // 安全记忆：带过期时间 & 简单混淆
+  const STORAGE_KEY = '_n_a_i_';
+  const storeToken = (t, expires = 24 * 60 * 60 * 1000) => {
+    const payload = { t, exp: Date.now() + expires };
+    localStorage.setItem(STORAGE_KEY, btoa(JSON.stringify(payload)));
+  };
+  const loadToken = () => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      const { t, exp } = JSON.parse(atob(raw));
+      if (Date.now() > exp) { localStorage.removeItem(STORAGE_KEY); return null; }
+      return t;
+    } catch { return null; }
+  };
+
+  // 从 URL hash 取得 token 并安全存储
+  const hash = location.hash.substring(1);
+  const params = new URLSearchParams(hash);
+  const tokenFromHash = params.get('access_token');
+  if (tokenFromHash) {
+    storeToken(tokenFromHash);
+    history.replaceState(null, null, '/admin/dashboard');
+  }
+
+  // 加载 token
+  const token = loadToken();
+  if (!token) {
+    location.href = '/admin/login';
+  } else {
+    // 验证组织成员
+    fetch(`https://api.github.com/user/orgs`, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).then(r => r.json()).then(orgs => {
+      const ok = orgs.some(o => o.login === GITHUB_ORG);
+      if (!ok) {
+        alert('非组织成员，无权限访问');
+        location.href = '/admin/login';
+      }
+    });
+  }
+</script>
+
 <AdminLayout title="控制台 - Novatra AI">
   <!-- 左侧导航菜单 -->
   <nav slot="nav">
