@@ -1,22 +1,11 @@
 ---
 // 静态后台首页，前端验证 GitHub org
+import Layout from '../../layouts/Layout.astro';
 const GITHUB_ORG = 'Passion-Novatra';
 ---
 
-<html lang="zh" class="overflow-hidden">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
-  <title>后台 - Novatra AI</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
-    }
-  </script>
-</head>
-<body class="min-h-screen bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100">
+<Layout title="后台 - Novatra AI">
+  <main class="min-h-screen bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100">
   <nav class="border-b border-stone-200 dark:border-stone-800 px-6 py-4 flex items-center justify-between">
     <div class="flex items-center gap-3">
       <img src="/logo.svg" alt="Logo" class="h-8" />
@@ -72,5 +61,5 @@ const GITHUB_ORG = 'Passion-Novatra';
       }
     });
   </script>
-</body>
-</html>
+  </main>
+</Layout>

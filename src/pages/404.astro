@@ -1,21 +1,10 @@
 ---
 // 高颜值 404
+import Layout from '../layouts/Layout.astro';
 ---
 
-<html lang="zh" class="overflow-hidden">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
-  <title>页面不见了 - Novatra AI</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
-    }
-  </script>
-</head>
-<body class="flex items-center justify-center min-h-screen bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100">
+<Layout title="页面不见了 - Novatra AI">
+  <main class="flex items-center justify-center min-h-screen bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100">
   <div class="text-center space-y-6">
     <img src="/logo.svg" alt="Logo" class="h-16 mx-auto" />
     <h1 class="text-5xl font-extrabold">404</h1>
@@ -25,5 +14,5 @@
       返回首页
     </a>
   </div>
-</body>
-</html>
+  </main>
+</Layout>

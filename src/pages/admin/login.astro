@@ -1,23 +1,12 @@
 ---
 // 静态登录页，用 GitHub OAuth PKCE 流程
+import Layout from '../../layouts/Layout.astro';
 const GITHUB_CLIENT_ID = 'Ov23lifWReXdJ6OcxeSS';
 const REDIRECT_URI = 'https://passion-novatra.github.io/admin/dashboard';
 ---
 
-<html lang="zh" class="overflow-hidden">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
-  <title>登录 - Novatra AI 管理后台</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
-    }
-  </script>
-</head>
-<body class="flex items-center justify-center min-h-screen bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100">
+<Layout title="登录 - Novatra AI 管理后台">
+  <main class="flex items-center justify-center min-h-screen bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100">
   <div class="w-full max-w-md p-8 space-y-6 bg-white dark:bg-stone-900 rounded-2xl shadow-xl">
     <div class="flex justify-center">
       <img src="/logo.svg" alt="Logo" class="h-12" />
@@ -41,5 +30,5 @@ const REDIRECT_URI = 'https://passion-novatra.github.io/admin/dashboard';
       location.href = `https://github.com/login/oauth/authorize?${params}`;
     };
   </script>
-</body>
-</html>
+  </main>
+</Layout>
