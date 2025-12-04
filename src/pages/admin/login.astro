@@ -1,11 +1,10 @@
 ---
-// 极简登录页，手动复制主站 head 和样式，避免 Layout 嵌套
+// 登录页，用极简布局确保样式一致
 const GITHUB_CLIENT_ID = 'Ov23lifWReXdJ6OcxeSS';
 const REDIRECT_URI = 'https://passion-novatra.github.io/admin/dashboard';
 ---
 
-<!doctype html>
-<html lang="zh" class="overflow-hidden">
+<html lang="zh">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -16,22 +15,21 @@ const REDIRECT_URI = 'https://passion-novatra.github.io/admin/dashboard';
         document.documentElement.classList.add('dark');
       }
     </script>
-    <link rel="stylesheet" href="/_astro/about.BWwiBGH1.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      /* 主站按钮样式复制 */
       .btn-primary {
-        @apply inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-stone-900 hover:bg-stone-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone-500 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-stone-200 transition;
+        @apply inline-flex items-center justify-center w-full px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-stone-900 hover:bg-stone-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone-500 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-stone-200 transition;
       }
     </style>
   </head>
-  <body class="flex items-center justify-center min-h-screen bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100 antialiased">
+  <body class="min-h-screen bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100 flex items-center justify-center">
     <div class="w-full max-w-md p-8 space-y-6 bg-white dark:bg-stone-900 rounded-2xl shadow-xl">
       <div class="flex justify-center">
         <img src="/logo.svg" alt="Logo" class="h-12" />
       </div>
       <h1 class="text-2xl font-bold text-center">Novatra AI 管理后台</h1>
       <p class="text-center text-sm text-stone-500 dark:text-stone-400">仅限组织成员登录</p>
-      <button id="loginBtn" class="btn-primary w-full">
+      <button id="loginBtn" class="btn-primary">
         使用 GitHub 登录
       </button>
     </div>
