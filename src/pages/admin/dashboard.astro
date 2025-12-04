@@ -1,55 +1,11 @@
 ---
-// 后台首页，三栏布局
+// 后台首页 —— 用 AdminLayout 包裹，只换内容
 import AdminLayout from '../../components/AdminLayout.astro';
 const GITHUB_ORG = 'Passion-Novatra';
 ---
 
-<script define:vars={{ GITHUB_ORG }}>
-  // 安全记忆：带过期时间 & 简单混淆
-  const STORAGE_KEY = '_n_a_i_';
-  const storeToken = (t, expires = 24 * 60 * 60 * 1000) => {
-    const payload = { t, exp: Date.now() + expires };
-    localStorage.setItem(STORAGE_KEY, btoa(JSON.stringify(payload)));
-  };
-  const loadToken = () => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return null;
-      const { t, exp } = JSON.parse(atob(raw));
-      if (Date.now() > exp) { localStorage.removeItem(STORAGE_KEY); return null; }
-      return t;
-    } catch { return null; }
-  };
-
-  // 从 URL hash 拿 token（GitHub 回跳带 hash）
-  const hash = location.hash.substring(1);
-  const params = new URLSearchParams(hash);
-  const tokenFromHash = params.get('access_token');
-  if (tokenFromHash) {
-    storeToken(tokenFromHash);
-    history.replaceState(null, null, '/admin/dashboard');
-  }
-
-  // 加载 token
-  const token = loadToken();
-  if (!token) {
-    location.href = '/admin/login';
-  } else {
-    // 验证组织成员
-    fetch(`https://api.github.com/user/orgs`, {
-      headers: { Authorization: `Bearer ${token}` }
-    }).then(r => r.json()).then(orgs => {
-      const ok = orgs.some(o => o.login === GITHUB_ORG);
-      if (!ok) {
-        alert('非组织成员，无权限访问');
-        location.href = '/admin/login';
-      }
-    });
-  }
-</script>
-
 <AdminLayout title="控制台 - Novatra AI">
-  <!-- 左侧导航菜单 -->
+  <!-- 左侧导航 -->
   <nav slot="nav">
     <a href="/admin/dashboard" class="flex items-center gap-3 px-3 py-2 rounded-md bg-stone-100 dark:bg-stone-800 font-semibold">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5l8 8-8 8"/></svg>
@@ -75,6 +31,7 @@ const GITHUB_ORG = 'Passion-Novatra';
 
   <!-- 右侧主内容 -->
   <div class="space-y-6">
+    <!-- 统计卡片 -->
     <section class="grid gap-6 md:grid-cols-3">
       <div class="p-6 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900">
         <div class="text-sm text-stone-500 dark:text-stone-400">总文章数</div>
@@ -90,16 +47,18 @@ const GITHUB_ORG = 'Passion-Novatra';
       </div>
     </section>
 
+    <!-- 快捷操作 -->
     <section class="p-6 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900">
       <h2 class="text-xl font-semibold mb-4">快捷操作</h2>
       <div class="flex flex-wrap gap-3">
-        <a href="/admin/dashboard" class="px-4 py-2 bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 rounded-lg font-medium hover:opacity-90 transition">返回后台首页</a>
-        <a href="/admin/archive" class="px-4 py-2 border border-stone-300 dark:border-stone-700 rounded-lg font-medium hover:bg-stone-100 dark:hover:bg-stone-800 transition">新建文档</a>
+        <a href="/admin/home" class="px-4 py-2 bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 rounded-lg font-medium hover:opacity-90 transition">编辑首页</a>
+        <a href="/admin/archive/new" class="px-4 py-2 border border-stone-300 dark:border-stone-700 rounded-lg font-medium hover:bg-stone-100 dark:hover:bg-stone-800 transition">新建文档</a>
         <a href="/admin/monitor" class="px-4 py-2 border border-stone-300 dark:border-stone-700 rounded-lg font-medium hover:bg-stone-100 dark:hover:bg-stone-800 transition">查看监控</a>
       </div>
     </section>
   </div>
 
+  <!-- 前端标准做法：token 验证（无后端） -->
   <script define:vars={{ GITHUB_ORG }}>
     // 安全记忆：带过期时间 & 简单混淆
     const STORAGE_KEY = '_n_a_i_';
@@ -117,7 +76,7 @@ const GITHUB_ORG = 'Passion-Novatra';
       } catch { return null; }
     };
 
-    // 从 URL hash 取得 token 并安全存储
+    // 从 hash 拿 token（GitHub 回跳带 hash）
     const hash = location.hash.substring(1);
     const params = new URLSearchParams(hash);
     const tokenFromHash = params.get('access_token');
@@ -126,34 +85,21 @@ const GITHUB_ORG = 'Passion-Novatra';
       history.replaceState(null, null, '/admin/dashboard');
     }
 
-    // 加载 token
+    // 无 token 跳回登录
     const token = loadToken();
     if (!token) {
       location.href = '/admin/login';
+    } else {
+      // 验证组织成员
+      fetch(`https://api.github.com/user/orgs`, {
+        headers: { Authorization: `Bearer ${token}` }
+      }).then(r => r.json()).then(orgs => {
+        const ok = orgs.some(o => o.login === GITHUB_ORG);
+        if (!ok) {
+          alert('非组织成员，无权限访问');
+          location.href = '/admin/login';
+        }
+      });
     }
-
-    // 退出登录
-    document.getElementById('logoutBtn')?.addEventListener('click', () => {
-      localStorage.removeItem(STORAGE_KEY);
-      location.href = '/admin/login';
-    });
-
-    // 显示用户名
-    fetch('https://api.github.com/user', {
-      headers: { Authorization: `Bearer ${token}` }
-    }).then(r => r.json()).then(user => {
-      document.getElementById('userName').textContent = user.login || '';
-    });
-
-    // 验证组织成员
-    fetch(`https://api.github.com/user/orgs`, {
-      headers: { Authorization: `Bearer ${token}` }
-    }).then(r => r.json()).then(orgs => {
-      const ok = orgs.some(o => o.login === GITHUB_ORG);
-      if (!ok) {
-        alert('非组织成员，无权限访问');
-        location.href = '/admin/login';
-      }
-    });
   </script>
 </AdminLayout>

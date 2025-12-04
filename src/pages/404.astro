@@ -1,5 +1,5 @@
 ---
-// 高颜值 404，统一风格
+// 原始 404 页，仅修 LOGO 尺寸
 ---
 
 <html lang="zh" class="scroll-smooth">
@@ -13,11 +13,12 @@
         document.documentElement.classList.add('dark');
       }
     </script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/_astro/about.BWwiBGH1.css" />
   </head>
-  <body class="min-h-screen bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100 flex items-center justify-center">
+  <body class="flex items-center justify-center min-h-screen bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100 antialiased">
     <div class="text-center space-y-6">
-      <img src="/logo.svg" alt="Logo" class="h-10 w-10 mx-auto" />
+      <!-- 只限制显示尺寸，SVG 本身不变 -->
+      <img src="/logo.svg" alt="Logo" class="h-16 w-16 mx-auto object-contain" />
       <h1 class="text-5xl font-extrabold">404</h1>
       <p class="text-lg text-stone-600 dark:text-stone-400">页面好像迷路了</p>
       <p class="text-sm text-stone-500 dark:text-stone-500">别担心，技术的探索总是伴随着未知。</p>

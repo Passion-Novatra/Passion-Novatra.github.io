@@ -1,50 +1,45 @@
 ---
-// 登录页，用极简布局确保样式一致
+// 后台登录页 —— 完全复刻前端风格，只加功能
+import Layout from '../../layouts/Layout.astro';
 const GITHUB_CLIENT_ID = 'Ov23lifWReXdJ6OcxeSS';
 const REDIRECT_URI = 'https://passion-novatra.github.io/admin/dashboard';
 ---
 
-<html lang="zh">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>登录 - Novatra AI 管理后台</title>
-    <script is:inline>
-      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-      }
-    </script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      .btn-primary {
-        @apply inline-flex items-center justify-center w-full px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-stone-900 hover:bg-stone-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone-500 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-stone-200 transition;
-      }
-    </style>
-  </head>
-  <body class="min-h-screen bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100 flex items-center justify-center">
+<Layout title="登录 - Novatra AI 管理后台">
+  <main class="flex items-center justify-center min-h-screen bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100">
     <div class="w-full max-w-md p-8 space-y-6 bg-white dark:bg-stone-900 rounded-2xl shadow-xl">
+      <!-- LOGO -->
       <div class="flex justify-center">
-        <img src="/logo.svg" alt="Logo" class="h-12" />
+        <img src="/logo.svg" alt="Logo" class="h-12 w-12 object-contain" />
       </div>
       <h1 class="text-2xl font-bold text-center">Novatra AI 管理后台</h1>
       <p class="text-center text-sm text-stone-500 dark:text-stone-400">仅限组织成员登录</p>
-      <button id="loginBtn" class="btn-primary">
+
+      <!-- 登录按钮 -->
+      <button id="loginBtn" class="w-full py-3 px-4 bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 rounded-lg font-semibold hover:opacity-90 transition">
         使用 GitHub 登录
       </button>
-    </div>
 
-    <script define:vars={{ GITHUB_CLIENT_ID, REDIRECT_URI }}>
-      document.getElementById('loginBtn').onclick = () => {
-        const params = new URLSearchParams({
-          client_id: GITHUB_CLIENT_ID,
-          redirect_uri: REDIRECT_URI,
-          scope: 'read:org',
-          response_type: 'token',
+      <!-- 返回前端首页 -->
+      <div class="text-center">
+        <a href="/" class="text-sm text-stone-500 dark:text-stone-400 hover:underline">返回博客首页</a>
+      </div>
+    </div>
+  </main>
+
+  <script define:vars={{ GITHUB_CLIENT_ID, REDIRECT_URI }}>
+    const btn = document.getElementById('loginBtn');
+    btn.addEventListener('click', () => {
+      btn.disabled = true;
+      btn.textContent = '跳转中…';
+      const params = new URLSearchParams({
+        client_id: GITHUB_CLIENT_ID,
         redirect_uri: REDIRECT_URI,
-        });
-        location.href = `https://github.com/login/oauth/authorize?${params}`;
-      };
-    </script>
-  </body>
-</html>
+        scope: 'read:org',
+        response_type: 'token',
+        state: Math.random().toString(36).slice(2),
+      });
+      location.href = `https://github.com/login/oauth/authorize?${params}`;
+    });
+  </script>
+</Layout>
