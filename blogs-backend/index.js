@@ -10,7 +10,10 @@ const cors = require('cors');
 const app = express();
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
-app.use(cors());
+app.use(cors({
+  origin: ['https://passion-novatra.github.io', 'http://localhost:4321'],
+  credentials: true
+}));
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));

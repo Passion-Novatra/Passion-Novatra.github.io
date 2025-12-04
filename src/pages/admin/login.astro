@@ -1,0 +1,45 @@
+---
+// 静态登录页，用 GitHub OAuth PKCE 流程
+const GITHUB_CLIENT_ID = 'Ov23lifWReXdJ6OcxeSS';
+const REDIRECT_URI = 'https://passion-novatra.github.io/admin/dashboard';
+---
+
+<html lang="zh" class="overflow-hidden">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+  <title>登录 - Novatra AI 管理后台</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    }
+  </script>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100">
+  <div class="w-full max-w-md p-8 space-y-6 bg-white dark:bg-stone-900 rounded-2xl shadow-xl">
+    <div class="flex justify-center">
+      <img src="/logo.svg" alt="Logo" class="h-12" />
+    </div>
+    <h1 class="text-2xl font-bold text-center">Novatra AI 管理后台</h1>
+    <p class="text-center text-sm text-stone-500 dark:text-stone-400">仅限组织成员登录</p>
+    <button id="loginBtn" class="w-full py-3 px-4 bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 rounded-lg font-semibold hover:opacity-90 transition">
+      使用 GitHub 登录
+    </button>
+  </div>
+
+  <script define:vars={{ GITHUB_CLIENT_ID, REDIRECT_URI }}>
+    document.getElementById('loginBtn').onclick = () => {
+      const params = new URLSearchParams({
+        client_id: GITHUB_CLIENT_ID,
+        redirect_uri: REDIRECT_URI,
+        scope: 'read:org',
+        response_type: 'token',
+        state: Math.random().toString(36).slice(2),
+      });
+      location.href = `https://github.com/login/oauth/authorize?${params}`;
+    };
+  </script>
+</body>
+</html>

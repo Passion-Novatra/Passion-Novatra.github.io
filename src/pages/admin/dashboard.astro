@@ -1,0 +1,76 @@
+---
+// 静态后台首页，前端验证 GitHub org
+const GITHUB_ORG = 'Passion-Novatra';
+---
+
+<html lang="zh" class="overflow-hidden">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+  <title>后台 - Novatra AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    }
+  </script>
+</head>
+<body class="min-h-screen bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100">
+  <nav class="border-b border-stone-200 dark:border-stone-800 px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <img src="/logo.svg" alt="Logo" class="h-8" />
+      <span class="font-bold text-lg">Novatra AI 管理后台</span>
+    </div>
+    <button id="logoutBtn" class="text-sm underline">退出</button>
+  </nav>
+
+  <main class="p-6 max-w-5xl mx-auto">
+    <h1 class="text-2xl font-bold mb-4">欢迎回来</h1>
+    <p class="text-stone-600 dark:text-stone-400 mb-6">只有 <strong>{GITHUB_ORG}</strong> 组织成员可访问。</p>
+
+    <section class="grid gap-4 md:grid-cols-3">
+      <a href="/admin/home" class="block p-4 rounded-xl border border-stone-200 dark:border-stone-800 hover:bg-stone-100 dark:hover:bg-stone-900 transition">
+        <div class="font-semibold">首页管理</div>
+        <div class="text-sm text-stone-500 dark:text-stone-400">编辑首页内容、字数、格式</div>
+      </a>
+      <a href="/admin/about" class="block p-4 rounded-xl border border-stone-200 dark:border-stone-800 hover:bg-stone-100 dark:hover:bg-stone-900 transition">
+        <div class="font-semibold">关于页面</div>
+        <div class="text-sm text-stone-500 dark:text-stone-400">管理关于页文案</div>
+      </a>
+      <a href="/admin/archive" class="block p-4 rounded-xl border border-stone-200 dark:border-stone-800 hover:bg-stone-100 dark:hover:bg-stone-900 transition">
+        <div class="font-semibold">归档系统</div>
+        <div class="text-sm text-stone-500 dark:text-stone-400">飞书式文件夹/文档</div>
+      </a>
+    </section>
+  </main>
+
+  <script define:vars={{ GITHUB_ORG }}>
+    const hash = location.hash.substring(1);
+    const params = new URLSearchParams(hash);
+    const token = params.get('access_token');
+    if (!token) {
+      location.href = '/admin/login';
+    } else {
+      localStorage.setItem('github_token', token);
+      history.replaceState(null, null, '/admin/dashboard');
+    }
+
+    document.getElementById('logoutBtn').onclick = () => {
+      localStorage.removeItem('github_token');
+      location.href = '/admin/login';
+    };
+
+    // 验证组织成员（前端简单验）
+    fetch(`https://api.github.com/user/orgs`, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).then(r => r.json()).then(orgs => {
+      const ok = orgs.some(o => o.login === GITHUB_ORG);
+      if (!ok) {
+        alert('非组织成员，无权限访问');
+        location.href = '/admin/login';
+      }
+    });
+  </script>
+</body>
+</html>
