@@ -21,7 +21,7 @@ const GITHUB_ORG = 'Passion-Novatra';
     } catch { return null; }
   };
 
-  // 从 URL hash 取得 token 并安全存储
+  // 从 URL hash 拿 token（GitHub 回跳带 hash）
   const hash = location.hash.substring(1);
   const params = new URLSearchParams(hash);
   const tokenFromHash = params.get('access_token');

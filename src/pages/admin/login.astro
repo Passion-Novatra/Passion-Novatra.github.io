@@ -41,7 +41,7 @@ const REDIRECT_URI = 'https://passion-novatra.github.io/admin/dashboard';
           redirect_uri: REDIRECT_URI,
           scope: 'read:org',
           response_type: 'token',
-          state: Math.random().toString(36).slice(2),
+        redirect_uri: REDIRECT_URI,
         });
         location.href = `https://github.com/login/oauth/authorize?${params}`;
       };
